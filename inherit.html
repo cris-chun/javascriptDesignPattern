@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>继承</title>
+</head>
+<body>
+
+<script type="text/javascript">
+    /*
+    * 继承有三种方式
+    * 类式继承
+    * 构造函数式继承
+    * 组合式继承
+    *
+    * 原型式继承
+    * 寄生式继承
+    * 寄生组合式继承
+    * */
+
+    //类式继承
+    //缺点：类式继承，如果父类中的共有属性是引用型，就会在子类中被所有实例公用，
+    // 因此一个子类的实例改变了这个共有的引用型属性，那么所有的子类实例就都会得到改变
+    function SuperClass(){
+        this.superValue = true;
+    }
+    SuperClass.prototype.getSuperValue = function(){
+        return this.superValue;
+    }
+
+    function SubClass(){
+        this.subValue = true;
+    }
+    SubClass.prototype = new SuperClass();
+    SubClass.prototype.getSubValue = function(){
+        return this.subValue;
+    }
+
+    //构造函数型继承
+    //缺点：由于这种继承没有涉及到prototype，所以父类的原型方法不会被子类继承
+    function Superbook (id,name){
+        this.bookList = ["1","2","3"];
+        this.id = id;
+        this.name = name;
+    }
+    Superbook.prototype.showBook = function(){
+        console.log(this.book);
+    }
+
+    function Subbook(id,name,price){
+        Superbook.call(this,id,name,price);//将父级作用域拉倒自己中，这样的话，每次实例化，就可以获取到全新的属性
+    }
+    var book = new Subbook(12);
+    console.log(book)
+
+
+    //组合式继承
+    function SuperTree(id,name){
+        this.id = id;
+        this.name = name;
+        this.treeList = ["1","2","3"];
+    }
+    SuperTree.prototype.getName = function(){
+        console.log(this.name)
+    }
+    function SubTree(id,name,price){
+        SuperTree.call(this,id,name);
+        this.price = price;
+    }
+    SubTree.prototype = new SuperTree();
+    SubTree.prototype.getPrice = function(){
+        console.log(this.price)
+    }
+    var tree = new SubTree(1,"tree",23);
+    console.log(tree)
+    tree.getName();
+    tree.getPrice();
+
+
+    //多继承   复制属性是可以的，但是复制引用型类型是无能为力的
+    //单继承的实现
+    function extend(target,source){
+        for(var property in source){
+            target[property] = source[property]
+        }
+        return target;
+    }
+    //多继承
+    var mix = function(){
+        var len = arguments.length,
+            target = arguments[0],
+            arg;
+        for(var i = 1;i<len;i++){
+            arg = arguments[i];
+            for(var property in arg){
+                target[property] = arg[property];
+            }
+        }
+        return target;
+    }
+    //可以在原型的Object上添加此方法
+    Object.prototype.mix = function(){
+        var len = arguments.length,
+            target = arguments[0],
+            arg;
+        for(var i = 1;i<len;i++){
+            arg = arguments[i];
+            for(var property in arg){
+                target[property] = arg[property];
+            }
+        }
+        return target;
+    }
+
+
+    //多态  同一个方法多种调用方式，使用arguments这个内在的参数实现
+
+</script>
+
+</body>
+</html>

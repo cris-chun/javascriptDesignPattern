@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>面向对象编程</title>
+</head>
+<body>
+
+<script type="text/javascript">
+    //封装   注意：将函数保存在变量中，这个变量首字母需要大写
+    //验证表单的时候，每个表单字段验证都需要写一个全局的function，这样的编程是面向过程，不是面向对象
+    //封装，需要把变量封装到一个对象中,可以通过内部的this变量来添加属性和方法
+    var Book = function(id,bookname,price){
+        this.id = id;
+        this.bookname = bookname;
+        this.price = price;
+    }
+    //也可以通过用prototype来类的原型上进行添加属性和方法
+    Book.prototype.display = function(){
+        console.log("这本书的展示方式")
+    }
+    Book.prototype = {
+        display:function(){}
+    }
+    var book = new Book(1,"javascript",23);
+    console.log(book);
+
+
+    //封装属性和方法
+    //通过new关键字实例化的对象，由于对类执行了一次，所以this上定义的属性和方法就可以复制到实例化对象上
+    var Book = function(id,name,price){
+        var num = 1;//私有属性
+        function checkId(){}//私有方法
+        this.getName = function(){}//特权方法，可以访问到函数内部的私有变量
+        this.setName = function(){}//特权方法，可以访问到函数内部的私有变量
+        this.id = id;//公有属性
+        this.copy = function(){}//公有方法
+        this.setName(name);//构造器
+    }
+    Book.isChinese = false;//类的静态公有属性，实例化的对象不能访问
+    Book.resetTime = function(){}//类静态公有方法，实例化对象不嫩访问
+    Book.prototype = {
+        isJSBook:true,//公有属性
+        display:function(){}//公有方法
+    }
+
+
+    //闭包   我们经常将类的静态变量通过闭包来实现
+    var Book = (function(){
+        var bookNum = 0;//静态私有变量
+        function checkBook(name){}//静态私有方法
+        function _book(id,name,price){
+            var name,price;//私有方法
+            function checkId(){}//私有方法
+            this.getName = function(){};//特权方法
+            this.setName = function(){}
+            this.id = id;//公有属性
+            this.copy =function(){}
+            bookNum++;
+            this.num = bookNum;
+            if(bookNum>100){
+                throw new Error("图书数量过多")
+            }
+            this.setName(name);
+        }
+        //构造原型
+        _book.prototype = {
+            isJSBook:true,
+            dispaly:function(){}
+        }
+        return _book;
+    })();
+    var book = new Book(3,"name",23);
+    console.log(book.num);//1
+    var book2 = new Book(4,"hello",23);
+    console.log(book2.num);//2
+
+
+    //找位检察长  有的时候忘记通过new来实例化对象
+    var Book = function(id,name,price){
+        this.name = name;
+        this.id = id;
+        this.price = price;
+    }
+    var book = Book(1,"name",23);
+    console.log(book)//undefined  因为缺少new关键字，所以实际上是为window赋值，为了防止这个可以像下面这样做
+    var Book = function(id,name,price){
+        if(this instanceof Book){
+            this.name = name;
+            this.id = id;
+            this.price = price;
+        }else{
+            return new Book(id,name,price);
+        }
+    }
+</script>
+
+</body>
+</html>

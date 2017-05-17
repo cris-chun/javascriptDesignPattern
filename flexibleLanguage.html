@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>灵活的js语言</title>
+</head>
+<body>
+
+<!--
+    如何封装对象，如何做到节约资源
+    在开发过程中，我们需要考虑到团队开发的效率，所以不应该定义很多的全局变量，因为会和团队中其他人定义的变量重名。
+        注意：全局变量不仅仅是变量，一个函数也是全局变量的一种，所以我们不能定义很多的全局函数
+    所以在开发过程中，我们需要用一个对象来封装这些函数
+    以下的例子以：验证表单为例
+-->
+
+<script type="text/javascript">
+    //第一种方法就是定义全局函数
+    // 缺点：定义了太多的全局变量
+    function checkName(){}
+    function checkEmail(){}
+    function checkPassword(){}
+
+    //第二种方法，将这些全局变量的函数封装在一个对象中
+    //缺点：如果多个人需要这个代码来验证表单的话，这时候就容易造成混乱
+    var checkObj = {
+        checkName : function(){},
+        checkEmail : function(){},
+        checkPssword : function(){}
+    }
+
+    //第三种方法。同时，函数也是一个对象，可以用函数来封装这些方法
+    // 缺点：使用new关键字来实例时，多人使用这个表单验证时，容易混乱
+    var CheckObject = function(){};
+    CheckObject.checkName = function(){};
+    CheckObject.checkEmail = function(){};
+    CheckObject.checkPassword = function(){};
+
+    //第四种方法，对第三种方法的改良,可以实现代码的复用，多个人使用代码的时候，不会导致混乱
+    var CheckObject = function(){
+        return {
+            checkName : function(){},
+            checkEmail : function(){},
+            checkPassword : function(){}
+        }
+    };
+    var a = CheckObject();
+    a.checkEmail();
+
+    //第五种方法  类也可以实现代码的复用，和第三种方法是一样的，可以实现多个人使用这些方法不导致混乱
+    //每次通过new关键字创建新对象的时候，新创建的对象都会对类的this上的属性进行复制
+    //缺点：过多的消耗，奢侈，因为每个实例都有自己的三个方法验证表单
+    var CheckObject = function(){
+        this.checkName = function(){}
+        this.checkEmail = function(){}
+        this.checkPssword = function(){}
+    }
+    var b = new CheckObject();
+    b.checkEmail();
+
+    //第六中方法，对第五种方法的改良  类方法
+    var CheckObject = function(){};
+    CheckObject.prototype.checkName = function(){};
+    CheckObject.prototype.checkEmail = function(){};
+    CheckObject.prototype.checkPassword = function(){};
+
+    //第七种方法，对滞洪第六种方法的简写,但是注意这两种方法不能混合用
+    //这样写的话  每实例化一个对象中就不是各自都有三个方法了  节约资源
+    var CheckObject = function(){};
+    CheckObject.prototype = {
+        checkName : function(){},
+        checkEmail : function(){},
+        checkPassword : function(){}
+    }
+
+    //方法还可以这样写  链式操作
+    var CheckObject = {
+        checkName : function(){
+            return this;
+        },
+        checkEmail : function(){
+            return this;
+        },
+        checkPassword : function(){
+            return this;
+        }
+    }
+
+    //也可以将链式的操作放在原型对象中
+    var CheckObject = function(){};
+    CheckObject.prototype = {
+        checkName : function(){
+            return this;
+        },
+        checkEmail : function(){
+            return this;
+        },
+        checkPassword : function(){
+            return this;
+        }
+    }
+
+    //也可以在Function原型中加
+    Function.prototype.addMethod = function(name,fn){
+        this[name] = fn;
+    }
+    var methods = new Function();
+    methods.addMethod("checkName",function(){});
+    methods.addMethod("checkEmail",function(){});
+    methods.addMethod("checkPassword",function(){});
+    methods.checkEmail();
+
+    //也可以链式操作
+    Function.prototype.addMethod = function(name,fn){
+        this[name] = fn;
+    }
+    var methods = new Function();
+    methods.addMethod("checkName",function(){
+        return this;
+    })
+    methods.addMethod("checkEmail",function(){
+        return this;
+    })
+    methods.addMethod("checkPassword",function(){
+        return this;
+    })
+    methods.checkName().checkEmail().checkPassword();
+
+
+    /*
+    * 总结
+    * 总共有四种方法可以实现（已经优化的方法）
+    * 第一种是用对象实现，将所有的方法写在对象中   多人写代码的时候会造成混乱
+    * 第二种是函数对象实现，将所有的方法写在函数中，然后最后返回这个函数对象  多人复用代码时候就不会造成混乱
+    * 第三种是类方法实现，将所有的方法写在函数对象的prototype中，这样每个实例化的对象中就不会各自带有方法，节约资源
+    * 第四种是在Function的prototype中写一个添加方法的方法，这样每次实例Function就会自带有这个方法，就可以向对象中加入方法
+    *
+    * 最后注意的是：可以实现链式操作，就是在方法的最后加上return this，这样就可以实现链式操作了
+    *
+    * */
+</script>
+
+
+</body>
+</html>
