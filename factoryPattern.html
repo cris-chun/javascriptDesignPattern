@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>工厂方法模式</title>
+</head>
+<body>
+
+<script type="text/javascript">
+    /*
+    * 如果累太多，那么我们就提供一个
+    * 工厂模式：返回一个实例，主要用来创建同一类对象
+    * */
+
+    //篮球类
+    var Basketball = function(){
+        this.info = "篮球"
+    }
+    Basketball.prototype = {
+        getMember:function(){
+            console.log("每个队需要5名人员")
+        },
+        getBallSize :function(){
+            console.log("篮球很大")
+        }
+    }
+    //足球类
+    var Football = function(){
+        this.info = "足球";
+    }
+    Football.prototype = {
+        getMember:function(){
+            console.log("每个队需要10名成员")
+        },
+        getBallSize:function(){
+            console.log("足球很大")
+        }
+    }
+    //网球类
+    var Tennis = function(){
+        this.info = "网球";
+    }
+    Tennis.prototype = {
+        getMember:function(){
+            console.log("每个队需要5名成员")
+        },
+        getBallSize : function(){
+            console.log("网球很小")
+        }
+    }
+
+    //球类工厂
+    var SportsFactory = function(name){
+        switch (name){
+            case "Basketball":
+                return new Basketball();
+            case "Football":
+                return new Football();
+            case "Tennis":
+                return new Tennis();
+        }
+    }
+
+    var football = SportsFactory("Football");
+    console.log(football);
+
+
+    /*
+    * 一个对象有时候也可以代替许多类
+    * 所有的弹框被封装在一个对象中，这个时候需要使用到工厂模式*/
+    function createPop(type,text){
+        var o = new Object();
+        o.content = text;
+        o.show = function(){}
+        if(type=="alert"){
+            //alert
+        }else if(type == "prompt"){
+            //prompt
+        }else if(type == "confirm"){
+            //confirm
+        }
+        return o;
+    }
+</script>
+
+
+
+<div id="container"></div>
+
+<script type="text/javascript">
+
+    /*
+    * 给我一张名片  工厂方法模式
+    * 通过对产品类的抽象使其创建业务主要负责用于创建多类产品的实例
+    * 返回实例，在添加新类时，开发者就不需要在工厂类中再修改代码
+    * */
+
+    var Factory = function(type,content){
+        if(this instanceof Factory){
+            var s = new this[type](content);
+            return s;
+        }else{
+            return new Factory(type,content);
+        }
+    }
+
+    Factory.prototype = {
+        Java : function(content){
+            //注意闭包的作用，我们调用Java这个函数，然后在函数内部就直接执行了代码
+            this.content = content;
+            var inner = function(content){
+                var div = document.createElement("div");
+                div.innerHTML = content;
+                div.style.background = "pink";
+                document.getElementById("container").appendChild(div);
+            }
+            return inner(content);
+        },
+        Javascript : function(content){
+            var div = document.createElement("div");
+            div.innerHTML = content;
+            div.style.background = "blue";
+            document.getElementById("container").appendChild(div);
+        },
+        UI : function(content){
+            this.content = content;
+            (function(content){
+                var div = document.createElement("div");
+                div.innerHTML = content;
+                div.style.background = "purple";
+                document.getElementById("container").appendChild(div);
+            })(content)
+        },
+        php : function(content){
+            this.content = content;
+            (function(content){
+                var div = document.createElement("div");
+                div.innerHTML = content;
+                div.style.background = "blue";
+                document.getElementById("container").appendChild(div);
+            })(content)
+        }
+    }
+    var datas = [
+        {
+            type:"Javascript",
+            content :"javascript哪家强"
+        },
+        {
+            type:"Java",
+            content :"java培训"
+        },
+        {
+            type:"UI",
+            content :"ui培训机构"
+        },
+        {
+            type:"php",
+            content :"php培新"
+        }
+    ];
+    for(var i = 0;i<datas.length;i++){
+        Factory(datas[i].type,datas[i].content);
+    }
+</script>
+
+<script type="text/javascript">
+    /*
+    * 抽象工厂模式
+    * 相当于Java中的抽象类
+    * */
+</script>
+
+</body>
+</html>

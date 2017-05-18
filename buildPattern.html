@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>建造者模式</title>
+</head>
+<body>
+
+<!--
+    一个对下那个有很多属性需要分析，把这些属性都分离出来形成很多类
+    看重的是  对象中还有对象  把这些对象抽出来实例化
+-->
+<script type="text/javascript">
+    //创建一位人类
+    var Human = function(param){
+        this.skill = param && param.skill || "保密";
+        this.hobby = param && param.hobby || "保密";
+    }
+    Human.prototype = {
+        getSkill : function(){
+            return this.skill;
+        },
+        getHobby :function(){
+            return this.hobby;
+        }
+    }
+
+    //实例化姓名
+    var Name = function(name){
+        var that = this;
+        (function(name,that){
+            that.wholeName = name;
+            if(name.indexOf(" ")>-1){
+                that.firstName = name.slice(0,name.indexOf(" "));
+                that.secondName = name.slice(name.indexOf(" "));
+            }
+        })(name,that);
+    }
+    //实例化职位
+    var Work = function(work){
+        var that = this;
+        (function(work,that){
+            switch (work){
+                case "code":
+                    that.work = "工程师";
+                    that.workDesc = "敲代码";
+                case "UI":
+                case "UE":
+                    that.work = "设计师";
+                    that.workDesc = "设计是一种艺术";
+                case "teach":
+                    that.work = "教师";
+                    that.workDesc = "教学";
+                default:
+                    that.work = work;
+                    that.workDesc = "您的职位还不确定"
+            }
+        })(work,that);
+    }
+    Work.prototype.changeWork = function(work){
+        this.work = work
+    }
+    Work.prototype.changeDesc = function(content){
+        this.workDesc = content;
+    }
+
+    //建造者类
+    var Person = function(name,work){
+        var _person = new Human();
+        _person.name = new Name(name);
+        _person.work = new Work(work);
+        return _person;
+    }
+
+    var person = new Person("taochun zhou","code");
+    console.log(person.skill);
+    console.log(person.hobby)
+    console.log(person.name.firstName);
+    console.log(person.name.secondName);
+    console.log(person.work.work);
+    console.log(person.work.workDesc)
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>原型模式</title>
+</head>
+<body>
+<!--
+    原型继承
+        用原型实例执行创建的类，使用与创建新的对象的类共享原型对象的属性和方法
+        共享基类中的方法和属性，也可以重写基类中的方法
+        当然在基类原型上后添加方法，子类也可以照样继承，没有影响
+            这个时候就需要注意：不能乱改原型中的数据，因为可能会影响其他人的代码正常运行
+    以图片轮播为例
+-->
+<div id="container"></div>
+
+<script type="text/javascript">
+    var LoopImages = function(imgArr,container){
+        this.imagesArray = imgArr;  //图片数组
+        this.container = container;  //容器
+    }
+    LoopImages.prototype = {
+        createImage : function(){}, //创建轮播图片
+        changeImage : function(){}  //切换下一张图片
+    }
+
+    //上下切换
+    var SlideImage = function(imgArr,container){
+        LoopImages.call(this,imgArr,container);
+    }
+    SlideImage.prototype = new LoopImages();
+    //重写
+    SlideImage.prototype.changeImage = function(){
+
+    }
+    var FadeImage = function(imgArr,container,arrow){
+        LoopImages.call(this,imgArr,container);
+        this.arrow = arrow;//箭头
+    }
+    FadeImage.prototype = new LoopImages();
+    //重写
+    FadeImage.prototype.changeImage = function(){
+
+    }
+
+    var imgArr = [
+        "image01.jpg",
+        "image02.jpg",
+        "image03.jpg"
+    ]
+    var container = document.getElementById("container");
+    var slide = new SlideImage(imgArr,container);
+    console.log(slide);
+    var fade = new FadeImage(imgArr,container.arrow);
+    console.log(fade)
+</script>
+
+</body>
+</html>
