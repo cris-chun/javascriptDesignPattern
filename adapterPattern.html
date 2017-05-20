@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>适配器模式</title>
+</head>
+<body>
+
+<!--
+    经常用到的场合：当页面引入了多种相似的框架
+                  参数适配器（当一个方法中的参数很多的时候，当开发者记不住这些参数时，这个时候就可以使用适配器来设置默认值）
+                  数据适配（前后台发送数据的不确定的时候，我们就可以使用适配器来规定数据的格式，统一数据格式是个好帮手）
+-->
+
+<script type="text/javascript">
+    /*jquery和其他相似的框架同时使用*/
+    //window.A = A = jQuery;
+
+    /*参数适配器*/
+    function doSomething(name,title,age,color,size,prize){}
+    function doSomething(obj){
+        var _adapter = {
+            name:"ztchun",
+            title:"ztcshop",
+            age:22,
+            color:"black",
+            size:38,
+            prize:300
+        }
+        for(var i in _adapter){
+            _adapter[i] = obj[i] || _adapter[i];
+        }
+    }
+
+    /*数据适配器  将数组转换成对象*/
+    function arrToObjectAdapter(arr){
+        return {
+            name:arr[0],
+            type:arr[1],
+            title:arr[2],
+            time:arr[3]
+        }
+    }
+
+</script>
+
+</body>
+</html>
