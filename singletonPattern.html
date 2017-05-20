@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>单例模式</title>
+</head>
+<body>
+
+<!--
+    单例模式经常用来设置一个命名空间，因为在团队开发的时候会有命名上的冲突，而单例模式是解决这种情况的最好的方法
+    可以用来创建一个小型的代码仓库
+    可以用来管理静态变量
+        静态变量的创建方法：定义在全局函数中
+                          定义在函数中，并用特权方法来访问
+-->
+
+<script type="text/javascript">
+    //创建自己的小型的代码库
+    var A = {
+        Util:{
+            util_method1:function(){},
+            util_method2:function(){}
+        },
+        Tool:{
+            tool_method1:function(){},
+            tool_method2:function(){}
+        },
+        ajax:{
+            ajax_method1:function(){},
+            ajax_method2:function(){}
+        }
+    }
+
+
+    //静态变量  当存在很多静态变量时，就使用下面的方法来定义静态变量，尽可能的少定义全局变量
+    var Conf = (function(){
+        var config = {
+            MAX_NUM:100,
+            MIN_NUM:0,
+            COUNT:12
+        }
+        return {
+            get:function(name){
+                return config[name] ? config[name] : null;
+            }
+        }
+    })();
+
+    var count = Conf.get("COUNT");
+    console.log(count);
+    count++;
+    console.log(count);
+
+
+    //惰性单例
+    var LazySingle = (function(){
+        var  _instance = null;
+        function Single(){
+            return{
+                publicMethod:function(){},
+                publicProperty:"1.0"
+            }
+        }
+        return function(){
+            if(!_instance){
+                _instance = Single();
+            }
+            return _instance;
+        }
+    })()
+    console.log(LazySingle().publicProperty)
+</script>
+
+</body>
+</html>
