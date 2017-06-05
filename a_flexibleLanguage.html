@@ -58,7 +58,7 @@
     var b = new CheckObject();
     b.checkEmail();
 
-    //第六中方法，对第五种方法的改良  类方法
+    //第六中方法，对第五种方法的改良  类方法   比较支持这种方法
     var CheckObject = function(){};
     CheckObject.prototype.checkName = function(){};
     CheckObject.prototype.checkEmail = function(){};
@@ -73,7 +73,7 @@
         checkPassword : function(){}
     }
 
-    //方法还可以这样写  链式操作
+    //方法还可以这样写  链式操作  支持这种方法
     var CheckObject = {
         checkName : function(){
             return this;
@@ -86,7 +86,7 @@
         }
     }
 
-    //也可以将链式的操作放在原型对象中
+    //也可以将链式的操作放在原型对象中  支持这种做法
     var CheckObject = function(){};
     CheckObject.prototype = {
         checkName : function(){

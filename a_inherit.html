@@ -54,7 +54,7 @@
     console.log(book)
 
 
-    //组合式继承
+    //组合式继承  比较支持这种做法
     function SuperTree(id,name){
         this.id = id;
         this.name = name;
@@ -78,14 +78,14 @@
 
 
     //多继承   复制属性是可以的，但是复制引用型类型是无能为力的
-    //单继承的实现
+    //单继承的实现  继承父类的属性
     function extend(target,source){
         for(var property in source){
             target[property] = source[property]
         }
         return target;
     }
-    //多继承
+    //多继承  但是对于引用型类型的数据是没有办法的  注意这里使用了arguments参数
     var mix = function(){
         var len = arguments.length,
             target = arguments[0],
@@ -113,7 +113,7 @@
     }
 
 
-    //多态  同一个方法多种调用方式，使用arguments这个内在的参数实现
+    //多态  同一个方法多种调用方式，使用arguments这个内在的参数实现  这就是javascript中多态的实现
 
 </script>
 

@@ -7,7 +7,7 @@
 <body>
 
 <script type="text/javascript">
-    //封装   注意：将函数保存在变量中，这个变量首字母需要大写
+    //封装   注意：将函数保存在变量中，这个变量首字母需要大写  封装对象  对象中有属性和方法，写成类似类的定义方法
     //验证表单的时候，每个表单字段验证都需要写一个全局的function，这样的编程是面向过程，不是面向对象
     //封装，需要把变量封装到一个对象中,可以通过内部的this变量来添加属性和方法
     var Book = function(id,bookname,price){
@@ -84,6 +84,7 @@
     }
     var book = Book(1,"name",23);
     console.log(book)//undefined  因为缺少new关键字，所以实际上是为window赋值，为了防止这个可以像下面这样做
+    //检察长来了  在定义类的是时候就应该加上这个检察长
     var Book = function(id,name,price){
         if(this instanceof Book){
             this.name = name;
