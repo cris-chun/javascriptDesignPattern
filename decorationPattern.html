@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>装饰者模式</title>
+</head>
+<body>
+<!--
+    装饰已经有的功能，在已经开发功能的基础上添加一些新的功能
+-->
+<script type="text/javascript">
+    /*装饰者模式*/
+    var decoration = function(input,fn){
+        var elem = document.getElementById(input);
+        if(typeof elem.onclick === "function"){
+            var oldClick = elem.onclick;
+            elem.onclick = function(){
+                oldClick();
+                fn();
+            }
+        }else{
+            elem.onclick = fn;
+        }
+    }
+</script>
+
+</body>
+</html>
