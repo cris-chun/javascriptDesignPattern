@@ -1,0 +1,210 @@
+1.简单的工厂模式：
+    提供一个类，使用switch语句；返回一个实例
+    var PopFactory = function(name){
+        switch(name){
+            case "alert":
+                return new LoginAlert();
+            case "confirm":
+                return new LoginConfirm();
+            case "prompt":
+                return new LoginPrompt();
+        }
+    }
+2.工厂方法模式
+    var Factory = function(type,content){
+        if(this instanceof Factory){
+            var s = new this[type](content);
+            return s;
+        }else{
+            return new Factory(type,content);
+        }
+    }
+    Factory.prototype = {
+        Java:function(content){},
+        JavaScript:function(content){}
+        Php:function(content){}
+        UI:function(content){
+            this.content = content;
+            (function(){
+                //一些操作
+            })(content)
+        }
+    }
+    var data = [
+        {type:"Java",content:"java内容"},
+        {type:"JavaScript",content:"javascript内容"}
+    ]
+    for(var i = 0;i < data.length;i ++){
+        Factory(data[i].type,data[i].content);
+    }
+    //注意
+    var Demo = function(){}
+    Demo.prototype = {
+        show:function(){
+            console.log("获取成功")
+        }
+    }
+    var d = new Demo();
+    d.show()// 获取成功
+    var d = Demo();
+    d.show()// 获取失败
+3.建造者模式
+    创建一位人类
+    var Human = function(param){
+        this.skill = param && param.skill || "保密";
+        this.hobby = param && param.hobby || "保密";
+    }
+    //人类的原型方法
+    Human.prototype = {
+        getSkill:function(){
+            return this.skill;
+        },
+        getHobby:function(){
+            return this.hobby;
+        }
+    }
+    //实例化姓名类
+    var Named = function(name){
+        var that = this;
+        (function(name,that){
+            that.wholeName = name;
+            if(name.indexOf(" ") > -1){
+                that.firstname = name.slice(0,name.indexOf(" "));
+                that.secondname = name.slice(name.indexOf(" "));
+            }
+        })(name,this)
+    }
+    //实例化职业
+    var Work = function(work){
+        var that = this;
+        (function(work,that){
+            switch(work){
+                case "code":
+                    that.work = "码农";
+                    that.workDesc = "程序员";
+                    break;
+                case "UI":
+                    //....
+            }
+        })(work,this)
+    }
+    //更期望的职位
+    Work.prototype.changeWork = function(work){
+        this.work = work;
+    }
+4.原型模式  继承  在继承之后 不要随意扩展，因为可能会影响其他人的代码
+    var LoopImage = functio(imgArr,container){
+        this.imgArr = imgArr;//轮播图片数组
+        this.container = container;//轮播容器
+    }
+    LoopImage.prototype = {
+        //创建轮播图片
+        createImage : function(){
+            console.log("LoopImage createImage function");
+        },
+        changeImage : function(){
+            console.log("LoopImage changeImage function");
+        }
+    }
+    //上下滑动切换类  继承父类的属性
+    var SlideImage = function(imgArr,container){
+        LoopImage.call(this,imgArr,container);
+    }
+    //继承父类的方法
+    SlideImage.prototype = new LoopImage();
+    //重写父类的方法
+    SlideImage.prototypr.createImage = function(){
+        console.log("SlideImage createImage function");
+    }
+    //附加  复制属性
+    function prototypeExtend = function(){
+        var F = function(){};
+        for(var i = 0;i<arguments.length;i++){
+            for(var j in arguments[i]){
+                F.prototype[j] = arguments[i][j];
+            }
+        }
+        return new F();
+    }
+5.单例模式
+    在开发过程中，经常会遇到命名重复发情况，这个时候就需要单例模式
+    单例模式：开发过程遇到很多的全局静态变量，这个时候就可以将所有的静态变量放在一个的单例中
+    var A = {
+        Util:{
+            util_method1:function(){},
+            util_method2:function(){},
+            //...
+        },
+        Tool:{
+            tool_method1:function(){},
+            tool_method2:function(){},
+            //...
+        },
+        //...
+    }
+6.外观模式
+    主要是用来解决浏览器的兼容性问题
+    function addEvent(dom,type,fn){
+        if(dom.addEventListener){
+            dom.addEventListener(type,fn,false);
+        }else if(dom.attacheEvent){
+            dom.attacheEvent("on"+type,fn);
+        }else{
+            dom["on"+type] = fn;
+        }
+    }
+    //获取事件对象
+    var getEvent = function(event){
+        return event || window.event;
+    }
+    //获取元素
+    var getTarget = function(event){
+        var event = getEvent(event);
+        return event.target || event.srcElement;
+    }
+    //阻止默认事件的发生
+    var preventDefault = function(event){
+        var event = getEvent(event);
+        if(event.preventDefault){
+            event.preventDefault();
+        }else{
+            event.returnValue = false;
+        }
+    }
+7.适配器模式
+    当前端框架中有俩种相似的框架的时候，需要使用适配器模式将两种框架分离
+    window.A = A = jQuery
+    参数适配器  服务器和客户端两边数据格式的适配
+    function doSomething(obj){
+        var _adapter = {
+            name:"适配器",
+            title:"设计模式",
+            age:3
+        }
+        for(vat i in _adapter){
+            _adapter[i] = obj[i] || _adapter;
+        }
+    }
+8.代理模式
+    代理对象：img  iframe  script  jsonp
+9.装饰者模式
+    修饰一些已经有的对象
+    装饰已经有功能的对象
+    var decorator = function(input,fn){
+        var input = document.getElementById(input);
+        if(typeof input.onlick === "function"){
+            vr oldClick = input.onclick;
+            input.onlick = function(){
+                oldClick();
+                fn();
+            }
+        }else{
+            input.onclick = fn;
+        }
+    }
+10.桥接模式
+    事件与业务逻辑之间的桥接
+    就是将一些相似功能的函数写成一个统一的接口函数
+11.组合模式
+    继承的组合模式  有点像原型模式
+12.
