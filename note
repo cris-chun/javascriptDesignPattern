@@ -11,6 +11,7 @@
         }
     }
 2.工厂方法模式
+    //如果没有通过new操作符获得一个实例的话  那么就使用下面的这个方法 安全方式
     var Factory = function(type,content){
         if(this instanceof Factory){
             var s = new this[type](content);
@@ -20,9 +21,9 @@
         }
     }
     Factory.prototype = {
-        Java:function(content){},
-        JavaScript:function(content){}
-        Php:function(content){}
+        Java:function(content){...},
+        JavaScript:function(content){...}
+        Php:function(content){...}
         UI:function(content){
             this.content = content;
             (function(){
@@ -44,6 +45,7 @@
             console.log("获取成功")
         }
     }
+    //如果不是通过new操作符获得到的对象  那么就无法调用到原型中的方法
     var d = new Demo();
     d.show()// 获取成功
     var d = Demo();
@@ -92,7 +94,7 @@
     Work.prototype.changeWork = function(work){
         this.work = work;
     }
-4.原型模式  继承  在继承之后 不要随意扩展，因为可能会影响其他人的代码
+4.原型模式  继承 重写父类中的方法  在继承之后 不要随意扩展，因为可能会影响其他人的代码
     var LoopImage = functio(imgArr,container){
         this.imgArr = imgArr;//轮播图片数组
         this.container = container;//轮播容器
