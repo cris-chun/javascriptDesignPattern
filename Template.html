@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模板模式</title>
+</head>
+<body>
+<!--
+    将对个模型抽象化归一，从中抽象提取出来一个最基本的模板，其他的模块只需要继承这个模板方法，也可以拓展某些方法
+-->
+
+<script type="text/javascript">
+    var Alert = function(data){
+        //如果没有传入参数 那么就结束这个函数的调用
+        if(!data){
+            return;
+        }
+        this.content = data.content;
+        //创建面板
+        this.panel = document.createElement("div");
+        this.contentNode = document.createElement("p");
+        this.confirmBtn = document.createElement("span");
+        this.closeBtn = document.createElement("b");
+        //为面板中的元素添加类
+        this.panel.className = "alert";
+        this.closeBtn.className = "a-close";
+        this.confirmBtn.className = "a-confirm";
+        //为面板中元素添加内容
+        this.confirmBtn.innerHTML = data.confirm || "确认";
+        this.closeBtn.innerHTML = data.close || "关闭";
+        this.contentNode.innerHTML = this.content;
+        //执行结果
+        this.success = data.success || function(){console.log("success")};
+        this.fail = data.fail || function(){console.log("fail")};
+    }
+
+    Alert.prototype = {
+        init:function(){
+            //将创建的元素放入到页面中
+            this.panel.appendChild(this.closeBtn);
+            this.panel.appendChild(this.contentNode);
+            this.panel.appendChild(this.confirmBtn);
+            document.body.appendChild(this.panel);
+            //绑定事件
+            this.bindEvent();
+            //展示面板
+            this.show()
+        },
+        bindEvent:function(){
+            var me = this;
+            this.closeBtn.onclick = function(){
+                //执行关闭取消方法
+                me.fail();
+                //隐藏弹框
+                me.hide();
+            }
+            this.confirmBtn.onclick = function(){
+                me.success();
+                me.show();
+            }
+        },
+        hide:function(){
+            this.panel.style.display = "none";
+        },
+        show:function(){
+            this.panel.style.display = "block";
+        }
+    }
+
+    //实现标题框
+    var Title = function(data){
+        Alert.call(this,data);
+        this.title = data.title;
+        this.titleNode = document.createElement("h3");
+        this.titleNode.innerHTML = this.title;
+    }
+    Title.prototype = new Alert();
+    Title.prototype.init = function(){
+        this.panel.insertBefore(this.titleNode,this.panel.firstChild);
+        //执行父类的原型汇中的方法
+        Alert.prototype.init.call(this);
+    }
+
+    //创建一个标题框
+    new Title({
+        title:"标题",
+        content:"标题内容",
+        success:function(){},
+        fail:function(){},
+    }).init()
+
+</script>
+
+</body>
+</html>
